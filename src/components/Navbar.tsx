@@ -1,13 +1,26 @@
 import { Link } from "@tanstack/react-router";
-import { Sparkles, Menu } from "lucide-react";
-import { useState } from "react";
+import { Sparkles, Menu, Bell, Wallet, Shield, Heart, User } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 export function Navbar() {
   const { user, signOut, profile, roles } = useAuth();
   const [open, setOpen] = useState(false);
+  const [unread, setUnread] = useState(0);
   const isSeller = roles.includes("seller") || roles.includes("both") || roles.includes("admin");
+  const isAdmin = roles.includes("admin");
+
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("notifications")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .eq("is_read", false)
+      .then(({ count }) => setUnread(count ?? 0));
+  }, [user]);
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur-xl">
@@ -34,8 +47,16 @@ export function Navbar() {
                   <Button size="sm" className="bg-[image:var(--gradient-primary)] text-primary-foreground hover:opacity-95">+ New gig</Button>
                 </Link>
               )}
+              <Link to="/notifications" className="relative hidden sm:inline-flex">
+                <Button variant="ghost" size="icon"><Bell className="h-4 w-4" /></Button>
+                {unread > 0 && (
+                  <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground">{unread}</span>
+                )}
+              </Link>
+              <Link to="/wallet" className="hidden sm:inline-flex"><Button variant="ghost" size="icon"><Wallet className="h-4 w-4" /></Button></Link>
+              {isAdmin && <Link to="/admin" className="hidden sm:inline-flex"><Button variant="ghost" size="icon"><Shield className="h-4 w-4" /></Button></Link>}
               <Link to="/dashboard"><Button variant="ghost" size="sm">Dashboard</Button></Link>
-              <span className="hidden lg:inline text-sm text-muted-foreground">{profile?.username ?? user.email}</span>
+              <Link to="/profile" className="hidden lg:inline-flex text-sm text-muted-foreground hover:text-foreground">{profile?.username ?? user.email}</Link>
               <Button variant="outline" size="sm" onClick={signOut}>Sign out</Button>
             </>
           ) : (
@@ -55,8 +76,13 @@ export function Navbar() {
             <Link to="/gigs" onClick={() => setOpen(false)}>Browse</Link>
             {user && <Link to="/orders" onClick={() => setOpen(false)}>Orders</Link>}
             {user && <Link to="/messages" onClick={() => setOpen(false)}>Messages</Link>}
+            {user && <Link to="/notifications" onClick={() => setOpen(false)} className="inline-flex items-center gap-2"><Bell className="h-4 w-4" /> Notifications {unread > 0 && `(${unread})`}</Link>}
+            {user && <Link to="/wallet" onClick={() => setOpen(false)} className="inline-flex items-center gap-2"><Wallet className="h-4 w-4" /> Wallet</Link>}
+            {user && <Link to="/favorites" onClick={() => setOpen(false)} className="inline-flex items-center gap-2"><Heart className="h-4 w-4" /> Saved</Link>}
+            {user && <Link to="/profile" onClick={() => setOpen(false)} className="inline-flex items-center gap-2"><User className="h-4 w-4" /> Profile</Link>}
             {isSeller && <Link to="/gigs/my" onClick={() => setOpen(false)}>My gigs</Link>}
             {isSeller && <Link to="/gigs/create" onClick={() => setOpen(false)}>+ New gig</Link>}
+            {isAdmin && <Link to="/admin" onClick={() => setOpen(false)} className="inline-flex items-center gap-2"><Shield className="h-4 w-4" /> Admin</Link>}
           </nav>
         </div>
       )}
