@@ -19,10 +19,13 @@ function Dashboard() {
     { icon: MessageSquare, label: "Unread messages", value: "0" },
   ];
 
-  const actions = [
-    { icon: ShoppingBag, title: "Browse gigs", desc: "Find the perfect service", href: "/", color: "from-primary to-primary-glow" },
-    ...(isSeller ? [{ icon: Briefcase, title: "My gigs", desc: "Manage your offerings", href: "/dashboard", color: "from-success to-primary" }] : []),
-    { icon: Settings, title: "Edit profile", desc: "Update your info", href: "/dashboard", color: "from-primary-glow to-success" },
+  const actions: Array<{ icon: typeof ShoppingBag; title: string; desc: string; href: "/gigs" | "/gigs/my" | "/profile" | "/wallet" | "/favorites" | "/orders" | "/messages"; color: string }> = [
+    { icon: ShoppingBag, title: "Browse gigs", desc: "Find the perfect service", href: "/gigs", color: "from-primary to-primary-glow" },
+    ...(isSeller ? [{ icon: Briefcase, title: "My gigs", desc: "Manage your offerings", href: "/gigs/my" as const, color: "from-success to-primary" }] : []),
+    { icon: Wallet, title: "Wallet", desc: "Balance & transactions", href: "/wallet", color: "from-primary to-success" },
+    { icon: Heart, title: "Saved gigs", desc: "Your favorites", href: "/favorites", color: "from-primary-glow to-primary" },
+    { icon: MessageSquare, title: "Messages", desc: "Chat with sellers", href: "/messages", color: "from-success to-primary-glow" },
+    { icon: Settings, title: "Edit profile", desc: "Update your info", href: "/profile", color: "from-primary-glow to-success" },
   ];
 
   return (
@@ -53,7 +56,7 @@ function Dashboard() {
           </div>
           {isAdmin && (
             <Link
-              to="/dashboard"
+              to="/admin"
               className="rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background hover:opacity-90"
             >
               Admin panel
