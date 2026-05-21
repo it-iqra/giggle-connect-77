@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { ArrowRight, Search, Shield, Zap, Star, Code, Palette, PenTool, Camera, Megaphone, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +19,8 @@ const categories = [
 ];
 
 function Landing() {
+  const navigate = useNavigate();
+  const [q, setQ] = useState("");
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -45,15 +48,20 @@ function Landing() {
               Work with talented people at the most affordable price to get the most out of your time and cost.
             </p>
 
-            <form className="mx-auto mt-10 flex max-w-2xl items-center gap-2 rounded-2xl border border-border bg-card p-2 shadow-[var(--shadow-elegant)]">
+            <form
+              onSubmit={(e) => { e.preventDefault(); navigate({ to: "/gigs", search: { q, cat: "" } }); }}
+              className="mx-auto mt-10 flex max-w-2xl items-center gap-2 rounded-2xl border border-border bg-card p-2 shadow-[var(--shadow-elegant)]"
+            >
               <div className="flex flex-1 items-center gap-3 pl-4">
                 <Search className="h-5 w-5 text-muted-foreground" />
                 <Input
+                  value={q}
+                  onChange={(e) => setQ(e.target.value)}
                   placeholder='Try "logo design" or "react developer"'
                   className="border-0 bg-transparent shadow-none focus-visible:ring-0"
                 />
               </div>
-              <Button size="lg" className="bg-[image:var(--gradient-primary)] text-primary-foreground hover:opacity-95">
+              <Button type="submit" size="lg" className="bg-[image:var(--gradient-primary)] text-primary-foreground hover:opacity-95">
                 Search
               </Button>
             </form>
@@ -78,8 +86,10 @@ function Landing() {
         </div>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
           {categories.map((c) => (
-            <div
+            <Link
               key={c.name}
+              to="/gigs"
+              search={{ q: "", cat: c.name }}
               className="group cursor-pointer rounded-2xl border border-border bg-card p-6 text-center transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-[var(--shadow-elegant)]"
             >
               <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-xl bg-accent text-accent-foreground transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
@@ -87,7 +97,7 @@ function Landing() {
               </div>
               <div className="font-semibold text-sm">{c.name}</div>
               <div className="mt-1 text-xs text-muted-foreground">{c.count} gigs</div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
