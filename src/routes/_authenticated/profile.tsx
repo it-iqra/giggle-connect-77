@@ -82,9 +82,13 @@ function ProfilePage() {
     else toast.success("Profile updated");
   }
 
-  async function persistField(field: string, value: string | null) {
+  async function persistAvatar(url: string) {
     if (!user) return;
-    await supabase.from("profiles").update({ [field]: value }).eq("id", user.id);
+    await supabase.from("profiles").update({ avatar_url: url }).eq("id", user.id);
+  }
+  async function persistResume(url: string) {
+    if (!user) return;
+    await supabase.from("profiles").update({ resume_url: url }).eq("id", user.id);
   }
 
   return (
@@ -107,7 +111,7 @@ function ProfilePage() {
                   label={form.avatar_url ? "Change avatar" : "Upload avatar"}
                   onUploaded={(url) => {
                     setForm((f) => ({ ...f, avatar_url: url }));
-                    persistField("avatar_url", url);
+                    persistAvatar(url);
                   }}
                 />
               </div>
@@ -161,7 +165,7 @@ function ProfilePage() {
                   label={form.resume_url ? "Replace resume" : "Upload resume"}
                   onUploaded={(url) => {
                     setForm((f) => ({ ...f, resume_url: url }));
-                    persistField("resume_url", url);
+                    persistResume(url);
                   }}
                 />
               </div>
