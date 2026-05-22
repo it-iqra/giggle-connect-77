@@ -326,6 +326,42 @@ export type Database = {
           },
         ]
       }
+      portfolio_items: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          project_url: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          project_url?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          project_url?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -342,6 +378,7 @@ export type Database = {
           location: string | null
           rating_avg: number | null
           response_time: string | null
+          resume_url: string | null
           skills: string[] | null
           total_reviews: number | null
           updated_at: string
@@ -362,6 +399,7 @@ export type Database = {
           location?: string | null
           rating_avg?: number | null
           response_time?: string | null
+          resume_url?: string | null
           skills?: string[] | null
           total_reviews?: number | null
           updated_at?: string
@@ -382,6 +420,7 @@ export type Database = {
           location?: string | null
           rating_avg?: number | null
           response_time?: string | null
+          resume_url?: string | null
           skills?: string[] | null
           total_reviews?: number | null
           updated_at?: string
