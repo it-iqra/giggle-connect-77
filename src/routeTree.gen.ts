@@ -14,15 +14,16 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GigsIndexRouteImport } from './routes/gigs/index'
 import { Route as SellersIdRouteImport } from './routes/sellers.$id'
+import { Route as ProfileUsernameRouteImport } from './routes/profile.$username'
 import { Route as GigsIdRouteImport } from './routes/gigs/$id'
 import { Route as AuthenticatedWalletRouteImport } from './routes/_authenticated/wallet'
-import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedFavoritesRouteImport } from './routes/_authenticated/favorites'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedOrdersIndexRouteImport } from './routes/_authenticated/orders.index'
 import { Route as AuthenticatedMessagesIndexRouteImport } from './routes/_authenticated/messages.index'
+import { Route as AuthenticatedProfileEditRouteImport } from './routes/_authenticated/profile.edit'
 import { Route as AuthenticatedOrdersIdRouteImport } from './routes/_authenticated/orders.$id'
 import { Route as AuthenticatedMessagesIdRouteImport } from './routes/_authenticated/messages.$id'
 import { Route as AuthenticatedGigsMyRouteImport } from './routes/_authenticated/gigs.my'
@@ -52,6 +53,11 @@ const SellersIdRoute = SellersIdRouteImport.update({
   path: '/sellers/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileUsernameRoute = ProfileUsernameRouteImport.update({
+  id: '/profile/$username',
+  path: '/profile/$username',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GigsIdRoute = GigsIdRouteImport.update({
   id: '/gigs/$id',
   path: '/gigs/$id',
@@ -60,11 +66,6 @@ const GigsIdRoute = GigsIdRouteImport.update({
 const AuthenticatedWalletRoute = AuthenticatedWalletRouteImport.update({
   id: '/wallet',
   path: '/wallet',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedNotificationsRoute =
@@ -100,6 +101,12 @@ const AuthenticatedMessagesIndexRoute =
     path: '/messages/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedProfileEditRoute =
+  AuthenticatedProfileEditRouteImport.update({
+    id: '/profile/edit',
+    path: '/profile/edit',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedOrdersIdRoute = AuthenticatedOrdersIdRouteImport.update({
   id: '/orders/$id',
   path: '/orders/$id',
@@ -128,15 +135,16 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/favorites': typeof AuthenticatedFavoritesRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
-  '/profile': typeof AuthenticatedProfileRoute
   '/wallet': typeof AuthenticatedWalletRoute
   '/gigs/$id': typeof GigsIdRoute
+  '/profile/$username': typeof ProfileUsernameRoute
   '/sellers/$id': typeof SellersIdRoute
   '/gigs/': typeof GigsIndexRoute
   '/gigs/create': typeof AuthenticatedGigsCreateRoute
   '/gigs/my': typeof AuthenticatedGigsMyRoute
   '/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/orders/$id': typeof AuthenticatedOrdersIdRoute
+  '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/messages/': typeof AuthenticatedMessagesIndexRoute
   '/orders/': typeof AuthenticatedOrdersIndexRoute
 }
@@ -147,15 +155,16 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/favorites': typeof AuthenticatedFavoritesRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
-  '/profile': typeof AuthenticatedProfileRoute
   '/wallet': typeof AuthenticatedWalletRoute
   '/gigs/$id': typeof GigsIdRoute
+  '/profile/$username': typeof ProfileUsernameRoute
   '/sellers/$id': typeof SellersIdRoute
   '/gigs': typeof GigsIndexRoute
   '/gigs/create': typeof AuthenticatedGigsCreateRoute
   '/gigs/my': typeof AuthenticatedGigsMyRoute
   '/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/orders/$id': typeof AuthenticatedOrdersIdRoute
+  '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/messages': typeof AuthenticatedMessagesIndexRoute
   '/orders': typeof AuthenticatedOrdersIndexRoute
 }
@@ -168,15 +177,16 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/favorites': typeof AuthenticatedFavoritesRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
-  '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/wallet': typeof AuthenticatedWalletRoute
   '/gigs/$id': typeof GigsIdRoute
+  '/profile/$username': typeof ProfileUsernameRoute
   '/sellers/$id': typeof SellersIdRoute
   '/gigs/': typeof GigsIndexRoute
   '/_authenticated/gigs/create': typeof AuthenticatedGigsCreateRoute
   '/_authenticated/gigs/my': typeof AuthenticatedGigsMyRoute
   '/_authenticated/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/_authenticated/orders/$id': typeof AuthenticatedOrdersIdRoute
+  '/_authenticated/profile/edit': typeof AuthenticatedProfileEditRoute
   '/_authenticated/messages/': typeof AuthenticatedMessagesIndexRoute
   '/_authenticated/orders/': typeof AuthenticatedOrdersIndexRoute
 }
@@ -189,15 +199,16 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/favorites'
     | '/notifications'
-    | '/profile'
     | '/wallet'
     | '/gigs/$id'
+    | '/profile/$username'
     | '/sellers/$id'
     | '/gigs/'
     | '/gigs/create'
     | '/gigs/my'
     | '/messages/$id'
     | '/orders/$id'
+    | '/profile/edit'
     | '/messages/'
     | '/orders/'
   fileRoutesByTo: FileRoutesByTo
@@ -208,15 +219,16 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/favorites'
     | '/notifications'
-    | '/profile'
     | '/wallet'
     | '/gigs/$id'
+    | '/profile/$username'
     | '/sellers/$id'
     | '/gigs'
     | '/gigs/create'
     | '/gigs/my'
     | '/messages/$id'
     | '/orders/$id'
+    | '/profile/edit'
     | '/messages'
     | '/orders'
   id:
@@ -228,15 +240,16 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/favorites'
     | '/_authenticated/notifications'
-    | '/_authenticated/profile'
     | '/_authenticated/wallet'
     | '/gigs/$id'
+    | '/profile/$username'
     | '/sellers/$id'
     | '/gigs/'
     | '/_authenticated/gigs/create'
     | '/_authenticated/gigs/my'
     | '/_authenticated/messages/$id'
     | '/_authenticated/orders/$id'
+    | '/_authenticated/profile/edit'
     | '/_authenticated/messages/'
     | '/_authenticated/orders/'
   fileRoutesById: FileRoutesById
@@ -246,6 +259,7 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthRoute: typeof AuthRoute
   GigsIdRoute: typeof GigsIdRoute
+  ProfileUsernameRoute: typeof ProfileUsernameRoute
   SellersIdRoute: typeof SellersIdRoute
   GigsIndexRoute: typeof GigsIndexRoute
 }
@@ -287,6 +301,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SellersIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile/$username': {
+      id: '/profile/$username'
+      path: '/profile/$username'
+      fullPath: '/profile/$username'
+      preLoaderRoute: typeof ProfileUsernameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/gigs/$id': {
       id: '/gigs/$id'
       path: '/gigs/$id'
@@ -299,13 +320,6 @@ declare module '@tanstack/react-router' {
       path: '/wallet'
       fullPath: '/wallet'
       preLoaderRoute: typeof AuthenticatedWalletRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/profile': {
-      id: '/_authenticated/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/notifications': {
@@ -350,6 +364,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMessagesIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/profile/edit': {
+      id: '/_authenticated/profile/edit'
+      path: '/profile/edit'
+      fullPath: '/profile/edit'
+      preLoaderRoute: typeof AuthenticatedProfileEditRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/orders/$id': {
       id: '/_authenticated/orders/$id'
       path: '/orders/$id'
@@ -386,12 +407,12 @@ interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedFavoritesRoute: typeof AuthenticatedFavoritesRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
-  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedWalletRoute: typeof AuthenticatedWalletRoute
   AuthenticatedGigsCreateRoute: typeof AuthenticatedGigsCreateRoute
   AuthenticatedGigsMyRoute: typeof AuthenticatedGigsMyRoute
   AuthenticatedMessagesIdRoute: typeof AuthenticatedMessagesIdRoute
   AuthenticatedOrdersIdRoute: typeof AuthenticatedOrdersIdRoute
+  AuthenticatedProfileEditRoute: typeof AuthenticatedProfileEditRoute
   AuthenticatedMessagesIndexRoute: typeof AuthenticatedMessagesIndexRoute
   AuthenticatedOrdersIndexRoute: typeof AuthenticatedOrdersIndexRoute
 }
@@ -401,12 +422,12 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedFavoritesRoute: AuthenticatedFavoritesRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
-  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedWalletRoute: AuthenticatedWalletRoute,
   AuthenticatedGigsCreateRoute: AuthenticatedGigsCreateRoute,
   AuthenticatedGigsMyRoute: AuthenticatedGigsMyRoute,
   AuthenticatedMessagesIdRoute: AuthenticatedMessagesIdRoute,
   AuthenticatedOrdersIdRoute: AuthenticatedOrdersIdRoute,
+  AuthenticatedProfileEditRoute: AuthenticatedProfileEditRoute,
   AuthenticatedMessagesIndexRoute: AuthenticatedMessagesIndexRoute,
   AuthenticatedOrdersIndexRoute: AuthenticatedOrdersIndexRoute,
 }
@@ -420,19 +441,10 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthRoute: AuthRoute,
   GigsIdRoute: GigsIdRoute,
+  ProfileUsernameRoute: ProfileUsernameRoute,
   SellersIdRoute: SellersIdRoute,
   GigsIndexRoute: GigsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

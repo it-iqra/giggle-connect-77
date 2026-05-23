@@ -1,6 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { ArrowLeft } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,12 +12,13 @@ import { PortfolioSection } from "@/components/PortfolioSection";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
-export const Route = createFileRoute("/_authenticated/profile")({
-  component: ProfilePage,
+export const Route = createFileRoute("/_authenticated/profile/edit")({
+  component: ProfileEditPage,
 });
 
-function ProfilePage() {
+function ProfileEditPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
@@ -78,8 +80,12 @@ function ProfilePage() {
       })
       .eq("id", user.id);
     setSaving(false);
-    if (error) toast.error(error.message);
-    else toast.success("Profile updated");
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Profile updated successfully");
+    navigate({ to: "/profile/$username", params: { username: "me" } });
   }
 
   async function persistAvatar(url: string) {
@@ -95,7 +101,10 @@ function ProfilePage() {
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container mx-auto max-w-3xl px-4 py-10">
-        <h1 className="text-3xl font-bold tracking-tight">Edit profile</h1>
+        <Link to="/profile/$username" params={{ username: "me" }} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+          <ArrowLeft className="h-4 w-4" /> Back to profile
+        </Link>
+        <h1 className="mt-3 text-3xl font-bold tracking-tight">Edit profile</h1>
         <p className="mt-1 text-sm text-muted-foreground">Showcase yourself to buyers and sellers.</p>
 
         {loading ? (
@@ -170,9 +179,14 @@ function ProfilePage() {
                 />
               </div>
 
-              <Button type="submit" disabled={saving} className="bg-[image:var(--gradient-primary)] text-primary-foreground">
-                {saving ? "Saving…" : "Save changes"}
-              </Button>
+              <div className="flex gap-2">
+                <Button type="submit" disabled={saving} className="bg-[image:var(--gradient-primary)] text-primary-foreground">
+                  {saving ? "Saving…" : "Save changes"}
+                </Button>
+                <Link to="/profile/$username" params={{ username: "me" }}>
+                  <Button type="button" variant="outline">Cancel</Button>
+                </Link>
+              </div>
             </form>
 
             {user && (
