@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Sparkles, Menu, Bell, Wallet, Shield, Heart, User } from "lucide-react";
+import { Sparkles, Menu, Bell, Wallet, Shield, Heart, User, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -56,7 +56,18 @@ export function Navbar() {
               <Link to="/wallet" className="hidden sm:inline-flex"><Button variant="ghost" size="icon"><Wallet className="h-4 w-4" /></Button></Link>
               {isAdmin && <Link to="/admin" className="hidden sm:inline-flex"><Button variant="ghost" size="icon"><Shield className="h-4 w-4" /></Button></Link>}
               <Link to="/dashboard"><Button variant="ghost" size="sm">Dashboard</Button></Link>
-              <Link to="/profile" className="hidden lg:inline-flex text-sm text-muted-foreground hover:text-foreground">{profile?.username ?? user.email}</Link>
+              <Link to="/profile/edit" className="hidden sm:inline-flex" title="Edit profile">
+                <Button variant="ghost" size="icon"><Settings className="h-4 w-4" /></Button>
+              </Link>
+              <Link to="/profile/$username" params={{ username: "me" }} title="View profile" className="inline-flex">
+                {profile?.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.username ?? "Profile"} className="h-10 w-10 rounded-full object-cover border border-border hover:border-primary transition-colors" />
+                ) : (
+                  <div className="grid h-10 w-10 place-items-center rounded-full bg-[image:var(--gradient-primary)] text-sm font-bold text-primary-foreground border border-border">
+                    {(profile?.username ?? user.email ?? "?")[0]?.toUpperCase()}
+                  </div>
+                )}
+              </Link>
               <Button variant="outline" size="sm" onClick={signOut}>Sign out</Button>
             </>
           ) : (
@@ -79,7 +90,8 @@ export function Navbar() {
             {user && <Link to="/notifications" onClick={() => setOpen(false)} className="inline-flex items-center gap-2"><Bell className="h-4 w-4" /> Notifications {unread > 0 && `(${unread})`}</Link>}
             {user && <Link to="/wallet" onClick={() => setOpen(false)} className="inline-flex items-center gap-2"><Wallet className="h-4 w-4" /> Wallet</Link>}
             {user && <Link to="/favorites" onClick={() => setOpen(false)} className="inline-flex items-center gap-2"><Heart className="h-4 w-4" /> Saved</Link>}
-            {user && <Link to="/profile" onClick={() => setOpen(false)} className="inline-flex items-center gap-2"><User className="h-4 w-4" /> Profile</Link>}
+            {user && <Link to="/profile/$username" params={{ username: "me" }} onClick={() => setOpen(false)} className="inline-flex items-center gap-2"><User className="h-4 w-4" /> Profile</Link>}
+            {user && <Link to="/profile/edit" onClick={() => setOpen(false)} className="inline-flex items-center gap-2"><Settings className="h-4 w-4" /> Edit profile</Link>}
             {isSeller && <Link to="/gigs/my" onClick={() => setOpen(false)}>My gigs</Link>}
             {isSeller && <Link to="/gigs/create" onClick={() => setOpen(false)}>+ New gig</Link>}
             {isAdmin && <Link to="/admin" onClick={() => setOpen(false)} className="inline-flex items-center gap-2"><Shield className="h-4 w-4" /> Admin</Link>}

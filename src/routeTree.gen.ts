@@ -16,7 +16,6 @@ import { Route as GigsIndexRouteImport } from './routes/gigs/index'
 import { Route as SellersIdRouteImport } from './routes/sellers.$id'
 import { Route as GigsIdRouteImport } from './routes/gigs/$id'
 import { Route as AuthenticatedWalletRouteImport } from './routes/_authenticated/wallet'
-import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedFavoritesRouteImport } from './routes/_authenticated/favorites'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -60,11 +59,6 @@ const GigsIdRoute = GigsIdRouteImport.update({
 const AuthenticatedWalletRoute = AuthenticatedWalletRouteImport.update({
   id: '/wallet',
   path: '/wallet',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedNotificationsRoute =
@@ -128,7 +122,6 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/favorites': typeof AuthenticatedFavoritesRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
-  '/profile': typeof AuthenticatedProfileRoute
   '/wallet': typeof AuthenticatedWalletRoute
   '/gigs/$id': typeof GigsIdRoute
   '/sellers/$id': typeof SellersIdRoute
@@ -147,7 +140,6 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/favorites': typeof AuthenticatedFavoritesRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
-  '/profile': typeof AuthenticatedProfileRoute
   '/wallet': typeof AuthenticatedWalletRoute
   '/gigs/$id': typeof GigsIdRoute
   '/sellers/$id': typeof SellersIdRoute
@@ -168,7 +160,6 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/favorites': typeof AuthenticatedFavoritesRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
-  '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/wallet': typeof AuthenticatedWalletRoute
   '/gigs/$id': typeof GigsIdRoute
   '/sellers/$id': typeof SellersIdRoute
@@ -189,7 +180,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/favorites'
     | '/notifications'
-    | '/profile'
     | '/wallet'
     | '/gigs/$id'
     | '/sellers/$id'
@@ -208,7 +198,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/favorites'
     | '/notifications'
-    | '/profile'
     | '/wallet'
     | '/gigs/$id'
     | '/sellers/$id'
@@ -228,7 +217,6 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/favorites'
     | '/_authenticated/notifications'
-    | '/_authenticated/profile'
     | '/_authenticated/wallet'
     | '/gigs/$id'
     | '/sellers/$id'
@@ -299,13 +287,6 @@ declare module '@tanstack/react-router' {
       path: '/wallet'
       fullPath: '/wallet'
       preLoaderRoute: typeof AuthenticatedWalletRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/profile': {
-      id: '/_authenticated/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/notifications': {
@@ -386,7 +367,6 @@ interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedFavoritesRoute: typeof AuthenticatedFavoritesRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
-  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedWalletRoute: typeof AuthenticatedWalletRoute
   AuthenticatedGigsCreateRoute: typeof AuthenticatedGigsCreateRoute
   AuthenticatedGigsMyRoute: typeof AuthenticatedGigsMyRoute
@@ -401,7 +381,6 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedFavoritesRoute: AuthenticatedFavoritesRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
-  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedWalletRoute: AuthenticatedWalletRoute,
   AuthenticatedGigsCreateRoute: AuthenticatedGigsCreateRoute,
   AuthenticatedGigsMyRoute: AuthenticatedGigsMyRoute,
