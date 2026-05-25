@@ -79,11 +79,11 @@ function GigDetail() {
       seller_id: gig.seller_id,
       package_type: pkg,
       amount: price,
-      status: "active",
+      status: "pending",
     }).select("id").single();
     setOrdering(false);
     if (error) { toast.error(error.message); return; }
-    toast.success("Order placed! Contact the seller to arrange payment.");
+    toast.success("Order placed! Waiting for seller to accept.");
     navigate({ to: "/orders/$id", params: { id: data.id } });
   };
 
