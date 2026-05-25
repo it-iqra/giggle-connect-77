@@ -66,7 +66,7 @@ function Orders() {
                     <td className="p-4 font-medium">{o.gigs?.title ?? "—"}</td>
                     <td className="p-4 capitalize">{o.package_type}</td>
                     <td className="p-4">${Number(o.amount).toFixed(2)}</td>
-                    <td className="p-4"><span className="rounded-full bg-accent px-2 py-0.5 text-xs font-medium capitalize">{o.status}</span></td>
+                    <td className="p-4"><span className={`rounded-full px-2 py-0.5 text-xs font-medium capitalize ${statusColor(o.status)}`}>{o.status}</span></td>
                     <td className="p-4 text-muted-foreground">{new Date(o.created_at).toLocaleDateString()}</td>
                     <td className="p-4"><Link to="/orders/$id" params={{ id: o.id }} className="text-primary font-medium">View</Link></td>
                   </tr>
