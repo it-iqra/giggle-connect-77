@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Sparkles, Menu, Bell, Wallet, Shield, Heart, User, Settings } from "lucide-react";
+import { Sparkles, Menu, Bell, Wallet, Shield, Heart, User, Settings, MessageSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -9,18 +9,34 @@ export function Navbar() {
   const { user, signOut, profile, roles } = useAuth();
   const [open, setOpen] = useState(false);
   const [unread, setUnread] = useState(0);
+  const [unreadMsgs, setUnreadMsgs] = useState(0);
   const isSeller = roles.includes("seller") || roles.includes("both") || roles.includes("admin");
   const isAdmin = roles.includes("admin");
 
   useEffect(() => {
     if (!user) return;
-    supabase
-      .from("notifications")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", user.id)
-      .eq("is_read", false)
+    const loadNotif = () => supabase
+      .from("notifications").select("id", { count: "exact", head: true })
+      .eq("user_id", user.id).eq("is_read", false)
       .then(({ count }) => setUnread(count ?? 0));
+    const loadMsgs = () => supabase
+      .from("messages").select("id", { count: "exact", head: true })
+      .eq("receiver_id", user.id).eq("is_read", false)
+      .then(({ count }) => setUnreadMsgs(count ?? 0));
+    loadNotif(); loadMsgs();
+
+    const ch = supabase.channel(`nav:${user.id}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "messages", filter: `receiver_id=eq.${user.id}` }, loadMsgs)
+      .on("postgres_changes", { event: "*", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, loadNotif)
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
   }, [user]);
+
+  // Browser tab title indicator
+  useEffect(() => {
+    const base = document.title.replace(/^\(\d+\)\s*/, "");
+    document.title = unreadMsgs > 0 ? `(${unreadMsgs}) ${base}` : base;
+  }, [unreadMsgs]);
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur-xl">
@@ -35,7 +51,14 @@ export function Navbar() {
         <nav className="hidden items-center gap-6 md:flex text-sm font-medium text-muted-foreground">
           <Link to="/gigs" className="hover:text-foreground transition-colors">Browse</Link>
           {user && <Link to="/orders" className="hover:text-foreground transition-colors">Orders</Link>}
-          {user && <Link to="/messages" className="hover:text-foreground transition-colors">Messages</Link>}
+          {user && (
+            <Link to="/messages" className="relative hover:text-foreground transition-colors inline-flex items-center gap-1">
+              Messages
+              {unreadMsgs > 0 && (
+                <span className="grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1.5 text-[10px] font-bold text-primary-foreground pulse-dot">{unreadMsgs}</span>
+              )}
+            </Link>
+          )}
           {isSeller && <Link to="/gigs/my" className="hover:text-foreground transition-colors">My gigs</Link>}
         </nav>
 
@@ -47,6 +70,10 @@ export function Navbar() {
                   <Button size="sm" className="bg-[image:var(--gradient-primary)] text-primary-foreground hover:opacity-95">+ New gig</Button>
                 </Link>
               )}
+              <Link to="/messages" className="relative sm:hidden">
+                <Button variant="ghost" size="icon"><MessageSquare className="h-4 w-4" /></Button>
+                {unreadMsgs > 0 && <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">{unreadMsgs}</span>}
+              </Link>
               <Link to="/notifications" className="relative hidden sm:inline-flex">
                 <Button variant="ghost" size="icon"><Bell className="h-4 w-4" /></Button>
                 {unread > 0 && (
@@ -86,7 +113,7 @@ export function Navbar() {
           <nav className="container mx-auto flex flex-col gap-2 px-4 py-3 text-sm">
             <Link to="/gigs" onClick={() => setOpen(false)}>Browse</Link>
             {user && <Link to="/orders" onClick={() => setOpen(false)}>Orders</Link>}
-            {user && <Link to="/messages" onClick={() => setOpen(false)}>Messages</Link>}
+            {user && <Link to="/messages" onClick={() => setOpen(false)} className="inline-flex items-center gap-2"><MessageSquare className="h-4 w-4" /> Messages {unreadMsgs > 0 && <span className="rounded-full bg-primary px-2 text-[10px] font-bold text-primary-foreground">{unreadMsgs}</span>}</Link>}
             {user && <Link to="/notifications" onClick={() => setOpen(false)} className="inline-flex items-center gap-2"><Bell className="h-4 w-4" /> Notifications {unread > 0 && `(${unread})`}</Link>}
             {user && <Link to="/wallet" onClick={() => setOpen(false)} className="inline-flex items-center gap-2"><Wallet className="h-4 w-4" /> Wallet</Link>}
             {user && <Link to="/favorites" onClick={() => setOpen(false)} className="inline-flex items-center gap-2"><Heart className="h-4 w-4" /> Saved</Link>}
