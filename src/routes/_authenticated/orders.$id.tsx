@@ -43,6 +43,11 @@ function OrderDetail() {
     setLoading(false);
   }
 
+  async function accept() {
+    const { error } = await supabase.from("orders").update({ status: "active" }).eq("id", id);
+    if (error) toast.error(error.message); else { toast.success("Order accepted!"); load(); }
+  }
+
   async function deliver() {
     if (!deliveryUrl) return toast.error("Add a delivery link or message");
     const { error } = await supabase.from("orders").update({ status: "delivered", delivery_file_url: deliveryUrl, delivered_at: new Date().toISOString() }).eq("id", id);
