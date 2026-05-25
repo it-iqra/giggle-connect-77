@@ -24,9 +24,23 @@ function Orders() {
     if (!user) return;
     setLoading(true);
     const col = tab === "buying" ? "buyer_id" : "seller_id";
-    supabase.from("orders").select("id,gig_id,buyer_id,seller_id,package_type,amount,status,created_at,gigs(title)").eq(col, user.id).order("created_at", { ascending: false })
-      .then(({ data }) => { setOrders((data ?? []) as Order[]); setLoading(false); });
+    const fetchOrders = () =>
+      supabase.from("orders").select("id,gig_id,buyer_id,seller_id,package_type,amount,status,created_at,gigs(title)").eq(col, user.id).order("created_at", { ascending: false })
+        .then(({ data }) => { setOrders((data ?? []) as Order[]); setLoading(false); });
+    fetchOrders();
+    const ch = supabase.channel(`orders:${user.id}:${tab}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "orders", filter: `${col}=eq.${user.id}` }, fetchOrders)
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
   }, [user, tab]);
+
+  const statusColor = (s: string) => ({
+    pending: "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300",
+    active: "bg-blue-100 text-blue-800 dark:bg-blue-950/40 dark:text-blue-300",
+    delivered: "bg-purple-100 text-purple-800 dark:bg-purple-950/40 dark:text-purple-300",
+    completed: "bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-300",
+    cancelled: "bg-muted text-muted-foreground",
+  } as Record<string, string>)[s] ?? "bg-accent text-accent-foreground";
 
   return (
     <div className="min-h-screen bg-background">
