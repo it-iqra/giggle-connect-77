@@ -43,6 +43,11 @@ function OrderDetail() {
     setLoading(false);
   }
 
+  async function accept() {
+    const { error } = await supabase.from("orders").update({ status: "active" }).eq("id", id);
+    if (error) toast.error(error.message); else { toast.success("Order accepted!"); load(); }
+  }
+
   async function deliver() {
     if (!deliveryUrl) return toast.error("Add a delivery link or message");
     const { error } = await supabase.from("orders").update({ status: "delivered", delivery_file_url: deliveryUrl, delivered_at: new Date().toISOString() }).eq("id", id);
@@ -93,6 +98,22 @@ function OrderDetail() {
           <Link to="/messages/$id" params={{ id: otherId }}>
             <Button variant="outline">Message {isBuyer ? "seller" : "buyer"}</Button>
           </Link>
+
+          {order.status === "pending" && (
+            <div className="rounded-2xl border-2 border-amber-400/40 bg-amber-50/40 dark:bg-amber-950/20 p-6">
+              <h3 className="font-semibold">Awaiting seller confirmation</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {isSeller
+                  ? "A buyer has placed this order. Confirm to start working."
+                  : "We're waiting for the seller to accept your order."}
+              </p>
+              {isSeller && (
+                <Button className="mt-3 bg-[image:var(--gradient-primary)] text-primary-foreground" onClick={accept}>
+                  Accept order
+                </Button>
+              )}
+            </div>
+          )}
 
           {isSeller && order.status === "active" && (
             <div className="rounded-2xl border border-border bg-card p-6">

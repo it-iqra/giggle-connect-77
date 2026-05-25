@@ -112,3 +112,15 @@
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }
+
+@keyframes flash-highlight {
+  0%   { background-color: oklch(0.95 0.13 95 / 0.9); box-shadow: 0 0 0 4px oklch(0.95 0.13 95 / 0.4); }
+  100% { background-color: transparent; box-shadow: 0 0 0 0 transparent; }
+}
+.flash-new { animation: flash-highlight 3.5s ease-out forwards; }
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(1.3); }
+}
+.pulse-dot { animation: pulse-dot 1.6s ease-in-out infinite; }
