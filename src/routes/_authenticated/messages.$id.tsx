@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { OnlineDot } from "@/components/OnlineStatus";
 
 export const Route = createFileRoute("/_authenticated/messages/$id")({
   component: ChatThread,
@@ -81,8 +82,14 @@ function ChatThread() {
       <div className="container mx-auto flex h-[calc(100vh-4rem)] max-w-2xl flex-col px-4 py-6">
         <Link to="/messages" className="text-sm text-muted-foreground">← Messages</Link>
         <div className="mt-2 flex items-center gap-3 border-b border-border pb-3">
-          <div className="grid h-10 w-10 place-items-center rounded-full bg-accent text-accent-foreground font-bold">{otherName[0]?.toUpperCase()}</div>
-          <h1 className="text-lg font-semibold">{otherName}</h1>
+          <div className="relative">
+            <div className="grid h-10 w-10 place-items-center rounded-full bg-accent text-accent-foreground font-bold">{otherName[0]?.toUpperCase()}</div>
+            <span className="absolute -bottom-0.5 -right-0.5"><OnlineDot userId={otherId} /></span>
+          </div>
+          <div>
+            <h1 className="text-lg font-semibold leading-tight">{otherName}</h1>
+            <OnlineDot userId={otherId} showLabel />
+          </div>
         </div>
 
         <div className="flex-1 space-y-3 overflow-y-auto py-4">
