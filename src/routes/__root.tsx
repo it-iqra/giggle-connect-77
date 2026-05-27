@@ -10,7 +10,13 @@ import {
 import { useEffect } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/useAuth";
+import { usePresence } from "@/hooks/usePresence";
 import { supabase } from "@/integrations/supabase/client";
+
+function PresenceTracker() {
+  usePresence();
+  return null;
+}
 
 import appCss from "../styles.css?url";
 
@@ -108,6 +114,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
+        <PresenceTracker />
         <Outlet />
         <Toaster />
       </AuthProvider>
