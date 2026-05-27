@@ -377,6 +377,7 @@ export type Database = {
           bio: string | null
           completed_orders: number | null
           created_at: string
+          current_session_id: string | null
           email_verified: boolean | null
           experience_level: string | null
           full_name: string | null
@@ -384,6 +385,7 @@ export type Database = {
           is_banned: boolean | null
           is_online: boolean | null
           languages: string[] | null
+          last_seen: string | null
           location: string | null
           rating_avg: number | null
           response_time: string | null
@@ -398,6 +400,7 @@ export type Database = {
           bio?: string | null
           completed_orders?: number | null
           created_at?: string
+          current_session_id?: string | null
           email_verified?: boolean | null
           experience_level?: string | null
           full_name?: string | null
@@ -405,6 +408,7 @@ export type Database = {
           is_banned?: boolean | null
           is_online?: boolean | null
           languages?: string[] | null
+          last_seen?: string | null
           location?: string | null
           rating_avg?: number | null
           response_time?: string | null
@@ -419,6 +423,7 @@ export type Database = {
           bio?: string | null
           completed_orders?: number | null
           created_at?: string
+          current_session_id?: string | null
           email_verified?: boolean | null
           experience_level?: string | null
           full_name?: string | null
@@ -426,6 +431,7 @@ export type Database = {
           is_banned?: boolean | null
           is_online?: boolean | null
           languages?: string[] | null
+          last_seen?: string | null
           location?: string | null
           rating_avg?: number | null
           response_time?: string | null

@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PortfolioSection } from "@/components/PortfolioSection";
+import { OnlineDot } from "@/components/OnlineStatus";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -104,17 +105,21 @@ function ProfileViewPage() {
         {/* Header */}
         <div className="rounded-2xl border border-border bg-card p-6">
           <div className="flex flex-wrap items-start gap-6">
-            {profile.avatar_url ? (
-              <img src={profile.avatar_url} alt={name} className="h-[120px] w-[120px] rounded-full object-cover border-2 border-border" />
-            ) : (
-              <div className="grid h-[120px] w-[120px] place-items-center rounded-full bg-[image:var(--gradient-primary)] text-4xl font-bold text-primary-foreground">{initial}</div>
-            )}
+            <div className="relative">
+              {profile.avatar_url ? (
+                <img src={profile.avatar_url} alt={name} className="h-[120px] w-[120px] rounded-full object-cover border-2 border-border" />
+              ) : (
+                <div className="grid h-[120px] w-[120px] place-items-center rounded-full bg-[image:var(--gradient-primary)] text-4xl font-bold text-primary-foreground">{initial}</div>
+              )}
+              <span className="absolute bottom-2 right-2 scale-150"><OnlineDot userId={profile.id} /></span>
+            </div>
             <div className="flex-1 min-w-[200px]">
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-3xl font-bold tracking-tight">{name}</h1>
                 <Badge variant="secondary">{roleBadge}</Badge>
               </div>
               {profile.username && <p className="mt-1 text-sm text-muted-foreground">@{profile.username}</p>}
+              <div className="mt-2"><OnlineDot userId={profile.id} showLabel /></div>
               <div className="mt-3 flex flex-wrap gap-4 text-sm text-muted-foreground">
                 {profile.location && <span className="inline-flex items-center gap-1"><MapPin className="h-4 w-4" /> {profile.location}</span>}
                 <span className="inline-flex items-center gap-1"><Calendar className="h-4 w-4" /> Member since {memberSince}</span>
