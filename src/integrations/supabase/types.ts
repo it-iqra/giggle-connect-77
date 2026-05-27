@@ -262,6 +262,7 @@ export type Database = {
       orders: {
         Row: {
           amount: number
+          buyer_confirmed: boolean
           buyer_id: string
           completed_at: string | null
           created_at: string
@@ -271,11 +272,14 @@ export type Database = {
           id: string
           package_type: Database["public"]["Enums"]["package_type"]
           requirements: string | null
+          seller_confirmed: boolean
           seller_id: string
           status: Database["public"]["Enums"]["order_status"]
+          updated_at: string
         }
         Insert: {
           amount: number
+          buyer_confirmed?: boolean
           buyer_id: string
           completed_at?: string | null
           created_at?: string
@@ -285,11 +289,14 @@ export type Database = {
           id?: string
           package_type: Database["public"]["Enums"]["package_type"]
           requirements?: string | null
+          seller_confirmed?: boolean
           seller_id: string
           status?: Database["public"]["Enums"]["order_status"]
+          updated_at?: string
         }
         Update: {
           amount?: number
+          buyer_confirmed?: boolean
           buyer_id?: string
           completed_at?: string | null
           created_at?: string
@@ -299,8 +306,10 @@ export type Database = {
           id?: string
           package_type?: Database["public"]["Enums"]["package_type"]
           requirements?: string | null
+          seller_confirmed?: boolean
           seller_id?: string
           status?: Database["public"]["Enums"]["order_status"]
+          updated_at?: string
         }
         Relationships: [
           {
