@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { OnlineDot } from "@/components/OnlineStatus";
 
 export const Route = createFileRoute("/_authenticated/messages/")({
   component: MessagesIndex,
@@ -73,7 +74,7 @@ function MessagesIndex() {
                 ) : (
                   <div className="grid h-10 w-10 place-items-center rounded-full bg-accent text-accent-foreground font-bold">{c.name[0]?.toUpperCase()}</div>
                 )}
-                {c.unread > 0 && <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full bg-primary ring-2 ring-card pulse-dot" />}
+                <span className="absolute -bottom-0.5 -right-0.5"><OnlineDot userId={c.otherId} /></span>
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex justify-between">
