@@ -87,6 +87,20 @@ function GigsBrowse() {
           })}
         </div>
 
+        {/* EDUCATIONAL XSS DEMO — intentionally vulnerable */}
+        <div className="mt-4 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800">
+          ⚠️ EDUCATIONAL XSS DEMO - Try searching for: &lt;script&gt;alert('XSS')&lt;/script&gt;
+        </div>
+
+        {q && (
+          <div
+            className="mt-4"
+            dangerouslySetInnerHTML={{
+              __html: `<div class="p-3 bg-red-100 border border-red-400 rounded mb-4">You searched for: ${q}</div>`,
+            }}
+          />
+        )}
+
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {loading && Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className="h-72 animate-pulse rounded-2xl border border-border bg-card" />
