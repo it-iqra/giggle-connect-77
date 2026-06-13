@@ -95,8 +95,20 @@ function GigsBrowse() {
         {q && (
           <div
             className="mt-4"
-            dangerouslySetInnerHTML={{
-              __html: `<div class="p-3 bg-red-100 border border-red-400 rounded mb-4">You searched for: ${q}</div>`,
+            ref={(el) => {
+              if (!el) return;
+              // Intentionally vulnerable: raw user input injected as HTML
+              el.innerHTML = `<div class="p-3 bg-red-100 border border-red-400 rounded mb-4">You searched for: ${q}</div>`;
+              // Browsers don't auto-run <script> inserted via innerHTML — re-execute them
+              // so the classic XSS payload demonstrates correctly.
+              el.querySelectorAll("script").forEach((oldScript) => {
+                const s = document.createElement("script");
+                for (const attr of Array.from(oldScript.attributes)) {
+                  s.setAttribute(attr.name, attr.value);
+                }
+                s.text = oldScript.textContent ?? "";
+                oldScript.parentNode?.replaceChild(s, oldScript);
+              });
             }}
           />
         )}
