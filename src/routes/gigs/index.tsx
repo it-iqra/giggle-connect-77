@@ -87,10 +87,6 @@ function GigsBrowse() {
           })}
         </div>
 
-        {/* EDUCATIONAL XSS DEMO — intentionally vulnerable */}
-        <div className="mt-4 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800">
-          ⚠️ EDUCATIONAL XSS DEMO - Try searching for: &lt;script&gt;alert('XSS')&lt;/script&gt;
-        </div>
 
         {q && (
           <div
