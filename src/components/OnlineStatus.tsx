@@ -27,7 +27,7 @@ export function useUserPresence(userId: string | null | undefined) {
     supabase.from("profiles").select("is_online,last_seen").eq("id", userId).maybeSingle()
       .then(({ data }) => { if (active && data) setState({ is_online: !!data.is_online, last_seen: data.last_seen ?? null }); });
 
-    const ch = supabase.channel(`presence:${userId}`)
+    const ch = supabase.channel(`profile-presence:${userId}:${Math.random().toString(36).slice(2)}`)
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "profiles", filter: `id=eq.${userId}` },
         (p) => {
           const row = p.new as { is_online: boolean; last_seen: string | null };
